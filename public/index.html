@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<title>JSnake Online</title>
+		<script src="js/modernizr.js"></script>
+		<script src="js/underscore.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/spin.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/knockout.min.js"></script>
+		<!-- socket.io -->
+		<script src="socket.io/socket.io.js"></script>
+		<script src="js/remote.js"></script>
+		<!-- room -->
+		<script src="js/room/room.js"></script>
+		<script src="js/room/model.js"></script>
+		<script src="js/room/viewmodel.js"></script>
+		<!-- game -->
+		<script src="js/processing.js"></script>
+		<script src="js/processing.framework.js"></script>
+		<script src="js/jsnake/jsnake.js"></script>
+		<script src="js/jsnake/util.js"></script>
+		<script src="js/jsnake/component.js"></script>
+		<script src="js/jsnake/core.js"></script>
+		<script src="js/jsnake/player.js"></script>
+		<script src="js/jsnake/socket.js"></script>
+		<script src="js/jsnake/dep/processing/index.js"></script>
+		<script src="js/jsnake/dep/processing/player.js"></script>
+		<script src="js/jsnake/dep/processing/scene.js"></script>
+		<script>
+room.setup();
+var vm = room.viewmodel;
+		</script>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" href="css/font-awesome.css" />
+		<!--[if IE 7]>
+		<link rel="stylesheet" href="css/font-awesome-ie7.css" />
+		<![endif]-->
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div id="container" class="container">
+			<header>
+				<h1>JSnake Online<i class="icon-cloud"></i></h1>
+			</header>
+			<div id="content" data-bind="with: current">
+				<!-- entry phase -->
+				<section class="phase-entry" data-bind="if: is(vm.EntryPhase), visible: is(vm.EntryPhase)">
+					<header class="page-header">
+						<h2><i class="icon-signal icon-large"></i> Connect to Server</h2>
+					</header>
+					<form class="control-group" data-bind="submit: entry">
+						<div class="input-prepend input-append">
+							<span class="add-on"><i class="icon-bolt"></i></span>
+							<input type="text" class="input-xlarge" placeholder="Server address" data-bind="value: serverAddress, valueUpdate: 'keyup'" />
+							<span class="add-on show-tooltip" data-placement="right" title="input a server address distributed JSnake">
+								<i class="icon-question-sign"></i>
+							</span>
+						</div>
+						<div class="input-prepend input-append">
+							<span class="add-on"><i class="icon-user"></i></span>
+							<input type="text" class="input-xlarge" placeholder="Player name" data-bind="value: playerName, valueUpdate: 'keyup'" />
+							<span class="add-on show-tooltip" data-placement="right" title="input a player name you like.">
+								<i class="icon-question-sign"></i>
+							</span>
+						</div>
+							<div class="controls">
+							<button type="submit" class="btn" data-bind="enable: isValid() &amp;&amp; !isLoading()">Connect</button>
+							<span class="help-inline">
+								<span data-bind="visible: isLoading()">
+									<span class="spinner"></span> connecting...
+								</span>
+								<span data-bind="visible: isError()">
+									<span class="label label-important">Error</span>
+									<span class="error" data-bind="text: error"></span>
+								</span>
+							</span>
+						</div>
+					</form>
+				</section>
+				<!-- room phase -->
+				<section class="phase-room" data-bind="if: is(vm.RoomPhase), visible: is(vm.RoomPhase)">
+					<header class="page-header">
+						<h2><i class="icon-home icon-large"></i> Room <small>@ <span data-bind="text: serverAddress"></span></small></h2>
+						<button class="btn btn-danger btn-large" data-bind="click: exit">Exit</button>
+					</header>
+					<div>
+						<h3><i class="icon-group"></i> Players</h3>
+						<div class="row-fluid" data-bind="foreach: players">
+							<div class="span3">
+								<div class="panel active" data-bind="visible: isActive">
+									<p>
+										<i class="icon-ok-sign"></i> <span data-bind="text: name"></span> <span data-bind="visible: isMe">(You)</span>
+									</p>
+									<p>
+										<span class="label label-success" data-bind="visible: isReady">Ready</span>
+										<span class="label label-default" data-bind="visible: !isReady()">Not Ready</span>
+									</p>
+									<div data-bind="if: isMe, visible: isMe">
+										<button class="btn btn-large btn-block btn-primary" data-bind="visible: !isReady(), enable: !isReadyBusy(), click: toggleReadyState">Ready !</button>
+										<button class="btn btn-large btn-block btn-inverse" data-bind="visible: isReady, enable: !isReadyBusy(), click: toggleReadyState">Not ready</button>
+									</div>
+								</div>
+								<div class="panel" data-bind="visible: !isActive()">
+									no player
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- game phase -->
+				<section class="phase-game" data-bind="if: is(vm.GamePhase), visible: is(vm.GamePhase)">
+					<header class="page-header">
+						<h2><i class="icon-fire"></i> Let's Play Game</h2>
+					</header>
+					<div>
+						<canvas data-bind="visible: !isLoading()"></canvas>
+						<div data-bind="visible: isLoading"></div>
+					</div>
+				</section>
+			</div>
+			<footer>
+				<p><small>&copy; 2012 shin - <a href="mailto:s2pch.luck&#64;gmail.com" title="You can contact me" class="show-tooltip"><i class="icon-envelope"></i>s2pch.luck&#64;gmail.com</a> - <a href="https://git-hub.com/s-shin/jsnake" title="View project on GitHub" class="show-tooltip"><i class="icon-github"></i>GitHub</small></a></p>
+			</footer>
+		</div>
+	</body>
+</html>

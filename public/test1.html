@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<title>PF test1</title>
+		<script src="js/processing.js"></script>
+		<script src="js/processing.framework.js"></script>
+		<script>
+window.addEventListener("load", function() {
+	var canvas = document.querySelector("canvas");
+	var Scene = function() {};
+	Scene.prototype = new PF.Scene();
+	Scene.prototype.setup = function(p) {
+		p.frameRate(5);
+		p.size(100, 100);
+		this.color = [0, 80, 160];
+	};
+	Scene.prototype.update = function(p) {
+		for (var i = 0; i < this.color.length; ++i)
+			this.color[i] = (this.color[i]+10) % 255;
+	};
+	Scene.prototype.draw = function(p) {
+		p.background.apply(p, this.color);
+	};
+	PF.setup(canvas, new Scene);
+});
+		</script>
+	</head>
+	<body>
+		<canvas></canvas>
+	</body>
+</html>

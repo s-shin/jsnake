@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<title>jsnake test</title>
+		<script src="js/underscore.js"></script>
+		<!-- jsnake core -->
+		<script src="js/jsnake/jsnake.js"></script>
+		<script src="js/jsnake/util.js"></script>
+		<script src="js/jsnake/component.js"></script>
+		<script src="js/jsnake/core.js"></script>
+		<script src="js/jsnake/player.js"></script>
+		<!-- jsnake view -->
+		<script src="js/processing.js"></script>
+		<script src="js/processing.framework.js"></script>
+		<script src="js/jsnake/dep/processing/index.js"></script>
+		<script src="js/jsnake/dep/processing/player.js"></script>
+		<script src="js/jsnake/dep/processing/scene.js"></script>
+		<script>
+window.addEventListener("load", function() {
+	var canvas = document.querySelector("canvas");
+	jsnake.prepare();
+
+	var OfflinePlayer1 = jsnake.dep.processing.player.OfflinePlayer1;
+	var ComputerPlayer = jsnake.player.ComputerPlayer
+
+	var a = new OfflinePlayer1(jsnake.player.ID.A, jsnake.player.INITIAL_POSITION.LT, 3);
+	var b = new ComputerPlayer(jsnake.player.ID.B, jsnake.player.INITIAL_POSITION.RB, 3);
+	var foods = jsnake.component.Food.getPreset(5);
+
+	jsnake.setupOffline([a, b], foods, function() {
+		console.log("end");
+	}, function() {
+		jsnake.dep.processing.setupView(canvas);
+	});
+});
+		</script>
+	</head>
+	<body>
+		<canvas></canvas>
+	</body>
+</html>

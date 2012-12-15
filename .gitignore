@@ -1,0 +1,6 @@
+.DS_Store
+lib/*.js
+lib/*/*
+node_modules/
+
+
