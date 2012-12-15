@@ -18,12 +18,4 @@ Setup
 		$ cake start
 
 2. Open a web browser and access <http://localhost:3000/>
-3. Input `/test` as "Server address" (see [js/main.coffee](./tree/master/js/main.coffee).
-
-License
--------
-
-MIT license
-
-
-
+3. Input `/test` as "Server address" (see [js/main.coffee](./tree/master/js/main.coffee)).
